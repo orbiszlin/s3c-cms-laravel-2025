@@ -1,0 +1,23 @@
+# Orbis simple CMS
+
+## How to install
+
+> `sail` is a command with alias `vendor/bin/sail`
+> 
+
+1. Install Docker
+2. Install dependencies by docker & sail, you can use `--ignore-platform-reqs`
+    ```bash
+    docker run --rm \
+        -u "$(id -u):$(id -g)" \
+        -v "$(pwd):/var/www/html" \
+        -w /var/www/html \
+        laravelsail/php84-composer:latest \
+        composer install
+    ```
+3. Copy `.env.example > .env` file and setup
+    - Generate key `sail artisan key:generate` (after `sail up`)
+4. Start app by `sail up` or `sail up -d`
+5. Install NPM by `sail npm install`
+6. Install NPM by `sail npm run build`
+7. Migrate user preferences `sail artisan migrate:fresh --seed` - Migrate all data with seeder
