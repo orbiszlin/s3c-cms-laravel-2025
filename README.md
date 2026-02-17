@@ -16,7 +16,7 @@
         composer install
     ```
 3. Copy [.env.example](.env.example) > [.env](.env) file and setup
-    - Generate key `sail artisan key:generate` (after `sail up`)
+    - Generate key `sail artisan key:generate` (**after sail is running** - `sail up`)
 4. Start app by `sail up` or `sail up -d`
 5. Install NPM by `sail npm install`
 6. Build CSS/JS assets by `sail npm run build`
