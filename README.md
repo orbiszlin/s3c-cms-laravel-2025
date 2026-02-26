@@ -4,6 +4,7 @@
 
 > `sail` is a command with alias `vendor/bin/sail`
 > 
+> **On Windows, clone the project directly inside WSL!** (For example, through the cloning feature in PhpStorm when creating a project from VCS.) There are no problems with mapping WSL and Windows folders.
 
 1. Install Docker
 2. Install dependencies by docker & sail, you can use `--ignore-platform-reqs` if you have dependencies problems
