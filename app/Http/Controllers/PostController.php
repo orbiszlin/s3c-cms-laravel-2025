@@ -6,6 +6,7 @@ use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -60,6 +61,10 @@ class PostController extends Controller
     {
         $post = Post::find($id);
 
+        if (! Gate::allows('update-post', $post)) {
+            abort(403);
+        }
+
         return view('post.edit', compact('post'));
     }
 
@@ -68,15 +73,23 @@ class PostController extends Controller
      */
     public function update(PostRequest $request, Post $post): RedirectResponse
     {
+        if (! Gate::allows('update-post', $post)) {
+            abort(403);
+        }
+
         $post->update($request->validated());
 
         return Redirect::route('posts.index')
             ->with('success', 'Post updated successfully');
     }
 
-    public function destroy($id): RedirectResponse
+    public function destroy(Post $post): RedirectResponse
     {
-        Post::find($id)->delete();
+        if (! Gate::allows('update-post', $post)) {
+            abort(403);
+        }
+
+        $post->delete();
 
         return Redirect::route('posts.index')
             ->with('success', 'Post deleted successfully');
