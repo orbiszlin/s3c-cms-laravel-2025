@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
@@ -12,11 +13,16 @@ use Illuminate\View\View;
 
 class PostController extends Controller
 {
+    // use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request): View
     {
+        // $this->authorize('viewAny', Post::class);
+        Gate::authorize('viewAny', Post::class);
+
         $posts = Post::paginate();
 
         return view('post.index', compact('posts'))
@@ -51,6 +57,8 @@ class PostController extends Controller
     {
         $post = Post::find($id);
 
+        Gate::authorize('view', $post);
+
         return view('post.show', compact('post'));
     }
 
@@ -61,7 +69,7 @@ class PostController extends Controller
     {
         $post = Post::find($id);
 
-        if (! Gate::allows('update-post', $post)) {
+        if (!Gate::allows('update-post', $post)) {
             abort(403);
         }
 
@@ -73,7 +81,7 @@ class PostController extends Controller
      */
     public function update(PostRequest $request, Post $post): RedirectResponse
     {
-        if (! Gate::allows('update-post', $post)) {
+        if (!Gate::allows('update-post', $post)) {
             abort(403);
         }
 
@@ -85,7 +93,7 @@ class PostController extends Controller
 
     public function destroy(Post $post): RedirectResponse
     {
-        if (! Gate::allows('update-post', $post)) {
+        if (!Gate::allows('update-post', $post)) {
             abort(403);
         }
 
