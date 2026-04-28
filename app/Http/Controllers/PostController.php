@@ -34,6 +34,8 @@ class PostController extends Controller
      */
     public function create(): View
     {
+        Gate::authorize('create', Post::class);
+
         $post = new Post();
 
         return view('post.create', compact('post'));
@@ -44,6 +46,8 @@ class PostController extends Controller
      */
     public function store(PostRequest $request): RedirectResponse
     {
+        Gate::authorize('create', Post::class);
+
         Post::create($request->validated());
 
         return Redirect::route('posts.index')
@@ -69,9 +73,7 @@ class PostController extends Controller
     {
         $post = Post::find($id);
 
-        if (!Gate::allows('update-post', $post)) {
-            abort(403);
-        }
+        Gate::authorize('update', $post);
 
         return view('post.edit', compact('post'));
     }
@@ -81,9 +83,7 @@ class PostController extends Controller
      */
     public function update(PostRequest $request, Post $post): RedirectResponse
     {
-        if (!Gate::allows('update-post', $post)) {
-            abort(403);
-        }
+        Gate::authorize('update', $post);
 
         $post->update($request->validated());
 
@@ -93,9 +93,7 @@ class PostController extends Controller
 
     public function destroy(Post $post): RedirectResponse
     {
-        if (!Gate::allows('update-post', $post)) {
-            abort(403);
-        }
+        Gate::authorize('delete', $post);
 
         $post->delete();
 

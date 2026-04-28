@@ -8,12 +8,17 @@ use Illuminate\Auth\Access\Response;
 
 class PostPolicy
 {
+    public function before(User $user)
+    {
+        return $user->hasRole('admin') ? true : null;
+    }
+
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        if ($user->email === 'test@example.com') {
+        if ($user->hasPermissionTo('posts.list')) {
             return true;
         }
 
@@ -25,9 +30,13 @@ class PostPolicy
      */
     public function view(User $user, Post $post): bool
     {
-        /*if ($user->id === $post->user_id) {
+        if ($user->hasPermissionTo('posts.view')) {
             return true;
-        }*/
+        }
+
+        if ($user->id === $post->user_id) {
+            return true;
+        }
 
         return false;
     }
@@ -37,6 +46,10 @@ class PostPolicy
      */
     public function create(User $user): bool
     {
+        if ($user->hasPermissionTo('posts.create')) {
+            return true;
+        }
+
         return false;
     }
 
@@ -45,6 +58,14 @@ class PostPolicy
      */
     public function update(User $user, Post $post): bool
     {
+        if ($user->hasPermissionTo('posts.update')) {
+            return true;
+        }
+
+        if ($user->id === $post->user_id) {
+            return true;
+        }
+
         return false;
     }
 
@@ -53,6 +74,10 @@ class PostPolicy
      */
     public function delete(User $user, Post $post): bool
     {
+        if ($user->hasPermissionTo('posts.delete')) {
+            return true;
+        }
+
         return false;
     }
 
@@ -61,6 +86,10 @@ class PostPolicy
      */
     public function restore(User $user, Post $post): bool
     {
+        if ($user->hasPermissionTo('posts.update')) {
+            return true;
+        }
+
         return false;
     }
 
@@ -69,6 +98,10 @@ class PostPolicy
      */
     public function forceDelete(User $user, Post $post): bool
     {
+        if ($user->hasPermissionTo('posts.delete')) {
+            return true;
+        }
+
         return false;
     }
 }
